@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import "."
+import "./ControlCenter"
 
 PanelWindow {
     id: root
@@ -115,8 +116,6 @@ PanelWindow {
             RowLayout {
                 Layout.alignment: Qt.AlignVCenter
                 spacing: 8
-
-                SettingsWidget {}
 
                 BatteryWidget {}
 
