@@ -3,3 +3,7 @@
 Kontrollcenter
 <img width="1366" height="768" alt="2026-03-25-212642_hyprshot" src="https://github.com/user-attachments/assets/8cf9e9e2-cced-490b-b26c-70304608f8a9" />
 Notes widget mit Markdown files für Obsidian.
+
+Font for Widget Symbols:
+sudo pacman -S ttf-material-symbols-variable
+
