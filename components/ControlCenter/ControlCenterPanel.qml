@@ -45,7 +45,7 @@ PanelWindow {
 
     exclusionMode: ExclusionMode.Ignore
     WlrLayershell.layer: WlrLayer.Top
-    WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
+    WlrLayershell.keyboardFocus: open ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 
     margins {
         top: panelTopY
@@ -119,234 +119,153 @@ PanelWindow {
                         text: root.hostText
                         color: "#ffffffff"
                         font.family: "JetBrainsMono Nerd Font"
-                        font.pixelSize: 22
+                        font.pixelSize: 18
                         font.weight: Font.Bold
-                    }
-
-                    Text {
-                        text: root.uptimeText
-                        color: "#99ffffff"
-                        font.family: "JetBrainsMono Nerd Font"
-                        font.pixelSize: 13
                     }
                 }
 
                 Rectangle {
-                    Layout.preferredWidth: 52
-                    Layout.preferredHeight: 52
-                    radius: 16
-                    color: "#22161a20"
+                    id: powerButton
+                    Layout.preferredWidth: 38
+                    Layout.preferredHeight: 38
+                    radius: 19
+                    color: powerMouse.containsMouse ? "#26d95763" : "#14000000"
                     border.width: 1
-                    border.color: "#44ffffff"
+                    border.color: powerMouse.containsMouse ? "#66d95763" : "#33ffffff"
+
+                    MouseArea {
+                        id: powerMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            if (powerMenu.opened)
+                                powerMenu.close();
+                            else
+                                powerMenu.open();
+                        }
+                    }
 
                     Text {
                         anchors.centerIn: parent
                         text: "\uf011"
                         color: "#ffffffff"
                         font.family: "JetBrainsMono Nerd Font"
-                        font.pixelSize: 20
+                        font.pixelSize: 14
                         font.weight: Font.Bold
                     }
+                }
 
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.closeRequested()
-                    }
+                Item {
+                    Layout.preferredWidth: 4
+                    Layout.preferredHeight: 4
                 }
             }
 
             Rectangle {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 114
-                radius: 20
-                color: "#18171b22"
+                Layout.preferredHeight: 150
+                radius: 24
+                color: "#cc161a20"
                 border.width: 1
                 border.color: "#33ffffff"
 
-                ColumnLayout {
+                RowLayout {
                     anchors.fill: parent
                     anchors.margins: 18
-                    spacing: 6
-
-                    Text {
-                        text: root.timeText
-                        color: "#ffffffff"
-                        font.family: "JetBrainsMono Nerd Font"
-                        font.pixelSize: 34
-                        font.weight: Font.Bold
-                    }
-
-                    Text {
-                        text: root.dateText
-                        color: "#bbffffff"
-                        font.family: "JetBrainsMono Nerd Font"
-                        font.pixelSize: 14
-                    }
-                }
-            }
-
-            GridLayout {
-                Layout.fillWidth: true
-                columns: 2
-                columnSpacing: 12
-                rowSpacing: 12
-
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 90
-                    radius: 18
-                    color: "#18171b22"
-                    border.width: 1
-                    border.color: "#33ffffff"
+                    spacing: 14
 
                     ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: 16
-                        spacing: 4
+                        Layout.fillWidth: true
+                        spacing: 2
 
                         Text {
-                            text: "BATTERY"
-                            color: "#88ffffff"
+                            text: root.timeText
+                            color: "#ffffffff"
                             font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 11
-                            font.weight: Font.DemiBold
-                            font.letterSpacing: 1.4
+                            font.pixelSize: 48
+                            font.weight: Font.Black
                         }
 
                         Text {
-                            text: root.batteryIcon + "  " + root.batteryText
-                            color: root.batteryCharging ? "#ffd4af37" : "#ffffffff"
-                            font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 22
-                            font.weight: Font.Bold
-                        }
-
-                        Text {
-                            text: root.batteryCharging ? "Charging" : "Battery power"
-                            color: "#99ffffff"
-                            font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 12
-                        }
-                    }
-                }
-
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 90
-                    radius: 18
-                    color: "#18171b22"
-                    border.width: 1
-                    border.color: "#33ffffff"
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: 16
-                        spacing: 4
-
-                        Text {
-                            text: "MEDIA"
-                            color: "#88ffffff"
-                            font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 11
-                            font.weight: Font.DemiBold
-                            font.letterSpacing: 1.4
-                        }
-
-                        Text {
-                            text: root.mediaText
-                            color: root.mediaActive ? "#ffffffff" : "#99ffffff"
+                            text: root.dateText
+                            color: "#b3ffffff"
                             font.family: "JetBrainsMono Nerd Font"
                             font.pixelSize: 14
-                            font.weight: Font.Bold
-                            elide: Text.ElideRight
-                            Layout.fillWidth: true
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: playerToggle.running = true
-                        }
-                    }
-                }
-
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 90
-                    radius: 18
-                    color: "#18171b22"
-                    border.width: 1
-                    border.color: "#33ffffff"
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: 16
-                        spacing: 4
-
-                        Text {
-                            text: "CPU"
-                            color: "#88ffffff"
-                            font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 11
                             font.weight: Font.DemiBold
-                            font.letterSpacing: 1.4
                         }
 
                         Text {
-                            text: root.cpuText
-                            color: "#ffffffff"
-                            font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 22
-                            font.weight: Font.Bold
-                        }
-
-                        Text {
-                            text: "Processor usage"
-                            color: "#99ffffff"
+                            text: batteryCharging ? "Charging" : "Running on battery"
+                            color: batteryCharging ? "#ffd4af37" : "#88ffffff"
                             font.family: "JetBrainsMono Nerd Font"
                             font.pixelSize: 12
                         }
                     }
-                }
-
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 90
-                    radius: 18
-                    color: "#18171b22"
-                    border.width: 1
-                    border.color: "#33ffffff"
 
                     ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: 16
-                        spacing: 4
+                        spacing: 10
 
-                        Text {
-                            text: "MEMORY"
-                            color: "#88ffffff"
-                            font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 11
-                            font.weight: Font.DemiBold
-                            font.letterSpacing: 1.4
+                        Rectangle {
+                            Layout.preferredWidth: 118
+                            Layout.preferredHeight: 46
+                            radius: 16
+                            color: "#181c2027"
+                            border.width: 1
+                            border.color: "#33ffffff"
+
+                            Column {
+                                anchors.centerIn: parent
+                                spacing: 2
+
+                                Text {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    text: root.batteryIcon + " " + root.batteryText
+                                    color: root.batteryCharging ? "#ffd4af37" : "#ffffffff"
+                                    font.family: "JetBrainsMono Nerd Font"
+                                    font.pixelSize: 15
+                                    font.weight: Font.Bold
+                                }
+
+                                Text {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    text: "Battery"
+                                    color: "#88ffffff"
+                                    font.family: "JetBrainsMono Nerd Font"
+                                    font.pixelSize: 11
+                                }
+                            }
                         }
 
-                        Text {
-                            text: root.memoryText
-                            color: "#ffffffff"
-                            font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 22
-                            font.weight: Font.Bold
-                        }
+                        Rectangle {
+                            Layout.preferredWidth: 118
+                            Layout.preferredHeight: 46
+                            radius: 16
+                            color: "#181c2027"
+                            border.width: 1
+                            border.color: "#33ffffff"
 
-                        Text {
-                            text: "RAM in use"
-                            color: "#99ffffff"
-                            font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 12
+                            Column {
+                                anchors.centerIn: parent
+                                spacing: 2
+
+                                Text {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    text: root.uptimeText
+                                    color: "#ffffffff"
+                                    font.family: "JetBrainsMono Nerd Font"
+                                    font.pixelSize: 15
+                                    font.weight: Font.Bold
+                                }
+
+                                Text {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    text: "Uptime"
+                                    color: "#88ffffff"
+                                    font.family: "JetBrainsMono Nerd Font"
+                                    font.pixelSize: 11
+                                }
+                            }
                         }
                     }
                 }
@@ -354,9 +273,9 @@ PanelWindow {
 
             Rectangle {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 108
-                radius: 20
-                color: "#18171b22"
+                Layout.preferredHeight: 96
+                radius: 22
+                color: "#bb13161b"
                 border.width: 1
                 border.color: "#33ffffff"
 
@@ -369,19 +288,18 @@ PanelWindow {
                         Layout.fillWidth: true
 
                         Text {
-                            text: "VOLUME"
+                            text: "\uf028  Volume"
                             color: "#88ffffff"
                             font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 11
+                            font.pixelSize: 12
                             font.weight: Font.DemiBold
-                            font.letterSpacing: 1.4
                         }
 
                         Item { Layout.fillWidth: true }
 
                         Text {
-                            text: root.volumeMuted ? "\uf6a9 " + root.volumeText : "\uf028 " + root.volumeText
-                            color: "#ffffffff"
+                            text: root.volumeMuted ? "Muted" : root.volumeText
+                            color: root.volumeMuted ? "#ff9d6b6b" : "#ffffffff"
                             font.family: "JetBrainsMono Nerd Font"
                             font.pixelSize: 13
                             font.weight: Font.Bold
@@ -389,17 +307,127 @@ PanelWindow {
                     }
 
                     Slider {
+                        id: control
                         Layout.fillWidth: true
+                        Layout.preferredHeight: 24
+                        orientation: Qt.Horizontal
+                        live: true
+                        padding: 0
                         from: 0
-                        to: 1
+                        to: 1.0
                         value: root.volumeValue
-
                         onMoved: {
                             root.volumeDragging = true;
+                            root.volumeMuted = false;
                             root.volumeValue = value;
                             root.volumeText = Math.round(value * 100) + "%";
+                        }
+                        onPressedChanged: {
+                            if (pressed) {
+                                root.volumeDragging = true;
+                                return;
+                            }
+
                             volumeSet.targetValue = value;
                             volumeSet.running = true;
+                        }
+
+                        background: Rectangle {
+                            x: control.leftPadding
+                            y: (control.height - height) / 2
+                            width: control.availableWidth
+                            height: 8
+                            radius: 4
+                            color: "#221f232b"
+
+                            Rectangle {
+                                width: control.visualPosition * parent.width
+                                height: parent.height
+                                radius: parent.radius
+                                color: root.volumeMuted ? "#aa9d6b6b" : "#ffd4af37"
+                            }
+                        }
+
+                        handle: Rectangle {
+                            x: control.leftPadding + control.visualPosition * (control.availableWidth - width)
+                            y: (control.height - height) / 2
+                            width: 18
+                            height: 18
+                            radius: 9
+                            color: "#ffffffff"
+                            border.width: 1
+                            border.color: root.volumeMuted ? "#aa9d6b6b" : "#ffd4af37"
+                        }
+                    }
+                }
+            }
+
+            GridLayout {
+                Layout.fillWidth: true
+                columns: 2
+                columnSpacing: 14
+                rowSpacing: 14
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 104
+                    radius: 22
+                    color: "#bb13161b"
+                    border.width: 1
+                    border.color: "#33ffffff"
+
+                    Column {
+                        anchors.left: parent.left
+                        anchors.leftMargin: 18
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 6
+
+                        Text {
+                            text: "\uf2db  CPU"
+                            color: "#88ffffff"
+                            font.family: "JetBrainsMono Nerd Font"
+                            font.pixelSize: 12
+                            font.weight: Font.DemiBold
+                        }
+
+                        Text {
+                            text: root.cpuText
+                            color: "#ffffffff"
+                            font.family: "JetBrainsMono Nerd Font"
+                            font.pixelSize: 27
+                            font.weight: Font.Bold
+                        }
+                    }
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 104
+                    radius: 22
+                    color: "#bb13161b"
+                    border.width: 1
+                    border.color: "#33ffffff"
+
+                    Column {
+                        anchors.left: parent.left
+                        anchors.leftMargin: 18
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 6
+
+                        Text {
+                            text: "\uf538  Memory"
+                            color: "#88ffffff"
+                            font.family: "JetBrainsMono Nerd Font"
+                            font.pixelSize: 12
+                            font.weight: Font.DemiBold
+                        }
+
+                        Text {
+                            text: root.memoryText
+                            color: "#ffffffff"
+                            font.family: "JetBrainsMono Nerd Font"
+                            font.pixelSize: 27
+                            font.weight: Font.Bold
                         }
                     }
                 }
@@ -407,64 +435,249 @@ PanelWindow {
 
             Rectangle {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 124
-                radius: 20
-                color: "#18171b22"
+                Layout.fillHeight: true
+                radius: 22
+                color: "#bb13161b"
                 border.width: 1
                 border.color: "#33ffffff"
 
-                GridLayout {
+                ColumnLayout {
                     anchors.fill: parent
                     anchors.margins: 16
-                    columns: 3
-                    rowSpacing: 10
-                    columnSpacing: 10
+                    spacing: 8
 
-                    Repeater {
-                        model: [
-                            { icon: "\uf011", label: "Shutdown", command: ["systemctl", "poweroff"] },
-                            { icon: "\uf2f1", label: "Reboot", command: ["systemctl", "reboot"] },
-                            { icon: "\uf186", label: "Suspend", command: ["systemctl", "suspend"] }
-                        ]
+                    RowLayout {
+                        Layout.fillWidth: true
 
-                        delegate: Rectangle {
-                            required property var modelData
+                        Text {
+                            text: "\uf001  Media"
+                            color: "#88ffffff"
+                            font.family: "JetBrainsMono Nerd Font"
+                            font.pixelSize: 12
+                            font.weight: Font.DemiBold
+                        }
+
+                        Item { Layout.fillWidth: true }
+
+                        Text {
+                            text: root.mediaActive ? "Active" : "Idle"
+                            color: root.mediaActive ? "#ffd4af37" : "#88ffffff"
+                            font.family: "JetBrainsMono Nerd Font"
+                            font.pixelSize: 11
+                        }
+                    }
+
+                    Text {
+                        Layout.fillWidth: true
+                        text: root.mediaText
+                        color: root.mediaActive ? "#ffffffff" : "#88ffffff"
+                        font.family: "JetBrainsMono Nerd Font"
+                        font.pixelSize: 15
+                        font.weight: Font.Bold
+                        wrapMode: Text.Wrap
+                        maximumLineCount: 3
+                        elide: Text.ElideRight
+                    }
+
+                    Item { Layout.fillHeight: true }
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 12
+
+                        Rectangle {
                             Layout.fillWidth: true
-                            Layout.preferredHeight: 72
-                            radius: 16
-                            color: "#22161a20"
+                            Layout.preferredHeight: 40
+                            radius: 14
+                            color: playPauseMouse.containsMouse ? "#26d4af37" : "#181c2027"
+                            border.width: 1
+                            border.color: "#44d4af37"
+
+                            MouseArea {
+                                id: playPauseMouse
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: playerToggle.running = true
+                            }
+
+                            Text {
+                                anchors.centerIn: parent
+                                text: "\uf04b  Play / Pause"
+                                color: "#ffffffff"
+                                font.family: "JetBrainsMono Nerd Font"
+                                font.pixelSize: 13
+                                font.weight: Font.Bold
+                            }
+                        }
+
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 40
+                            radius: 14
+                            color: closeActionMouse.containsMouse ? "#22ffffff" : "#181c2027"
                             border.width: 1
                             border.color: "#33ffffff"
 
-                            Column {
+                            MouseArea {
+                                id: closeActionMouse
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: root.closeRequested()
+                            }
+
+                            Text {
                                 anchors.centerIn: parent
-                                spacing: 6
+                                text: "\uf00d  Close"
+                                color: "#ffffffff"
+                                font.family: "JetBrainsMono Nerd Font"
+                                font.pixelSize: 13
+                                font.weight: Font.Bold
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.topMargin: 8
+            anchors.rightMargin: 8
+            width: 26
+            height: 26
+            radius: 13
+            color: closeMouse.containsMouse ? "#22ffffff" : "#10000000"
+            border.width: 1
+            border.color: "#2effffff"
+            z: 3
+
+            MouseArea {
+                id: closeMouse
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked: root.closeRequested()
+            }
+
+            Text {
+                anchors.centerIn: parent
+                text: "\uf00d"
+                color: "#ffffffff"
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 11
+                font.weight: Font.Bold
+            }
+        }
+
+        Popup {
+            id: powerMenu
+            parent: root.contentItem
+            modal: false
+            dim: false
+            padding: 0
+            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside | Popup.CloseOnPressOutsideParent
+            x: Math.min(powerButton.x + powerButton.width + 20, root.width - implicitWidth - 20)
+            y: Math.max(20, powerButton.y - 4)
+            z: 4
+
+            background: Rectangle {
+                radius: 18
+                color: "#cc161a20"
+                border.width: 1
+                border.color: "#33ffffff"
+            }
+
+            contentItem: Column {
+                spacing: 0
+
+                Repeater {
+                    model: [
+                        {
+                            label: "Sleep",
+                            icon: "\uf186",
+                            command: ["systemctl", "suspend"]
+                        },
+                        {
+                            label: "Restart",
+                            icon: "\uf2f1",
+                            command: ["systemctl", "reboot"]
+                        },
+                        {
+                            label: "Shut down",
+                            icon: "\uf011",
+                            command: ["systemctl", "poweroff"]
+                        }
+                    ]
+
+                    delegate: Rectangle {
+                        id: actionButton
+                        required property var modelData
+
+                        width: 188
+                        height: 52
+                        radius: index === 0 ? 18 : (index === 2 ? 18 : 0)
+                        topLeftRadius: index === 0 ? 18 : 0
+                        topRightRadius: index === 0 ? 18 : 0
+                        bottomLeftRadius: index === 2 ? 18 : 0
+                        bottomRightRadius: index === 2 ? 18 : 0
+                        color: actionMouse.containsMouse ? "#221f232b" : "#00000000"
+
+                        MouseArea {
+                            id: actionMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                root.pendingPowerCommand = parent.modelData.command;
+                                powerAction.running = true;
+                                powerMenu.close();
+                            }
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            height: 1
+                            visible: index < 2
+                            color: "#22ffffff"
+                        }
+
+                        Row {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.leftMargin: 16
+                            spacing: 12
+
+                            Text {
+                                text: actionButton.modelData.icon
+                                color: "#ffd4af37"
+                                font.family: "JetBrainsMono Nerd Font"
+                                font.pixelSize: 16
+                                font.weight: Font.Bold
+                            }
+
+                            Column {
+                                spacing: 2
 
                                 Text {
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    text: parent.parent.modelData.icon
+                                    text: actionButton.modelData.label
                                     color: "#ffffffff"
                                     font.family: "JetBrainsMono Nerd Font"
-                                    font.pixelSize: 20
+                                    font.pixelSize: 13
                                     font.weight: Font.Bold
                                 }
 
                                 Text {
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    text: parent.parent.modelData.label
-                                    color: "#ccffffff"
+                                    text: actionButton.modelData.label === "Sleep"
+                                        ? "Suspend session"
+                                        : (actionButton.modelData.label === "Restart" ? "Reboot system" : "Power off system")
+                                    color: "#88ffffff"
                                     font.family: "JetBrainsMono Nerd Font"
-                                    font.pixelSize: 12
-                                }
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: {
-                                    root.pendingPowerCommand = parent.modelData.command;
-                                    powerAction.running = true;
+                                    font.pixelSize: 11
                                 }
                             }
                         }
@@ -474,52 +687,48 @@ PanelWindow {
         }
     }
 
-    Component.onCompleted: {
-        refreshClock();
-        statsProbe.running = true;
-        mediaProbe.running = true;
-        volumeProbe.running = true;
-    }
-
-    onOpenChanged: {
-        if (open) {
-            refreshClock();
-            statsProbe.running = true;
-            mediaProbe.running = true;
-            volumeProbe.running = true;
-        }
-    }
-
     Timer {
         interval: 1000
-        running: root.open
+        running: true
         repeat: true
         triggeredOnStart: true
         onTriggered: root.refreshClock()
     }
 
+    Shortcut {
+        sequence: "Escape"
+        enabled: root.open
+        onActivated: {
+            if (powerMenu.opened)
+                powerMenu.close();
+            else
+                root.closeRequested();
+        }
+    }
+
     Timer {
         interval: 5000
-        running: root.open
+        running: true
         repeat: true
         triggeredOnStart: true
         onTriggered: {
-            statsProbe.running = true;
+            systemProbe.running = true;
             mediaProbe.running = true;
-            volumeProbe.running = true;
+            if (!root.volumeDragging)
+                volumeProbe.running = true;
         }
     }
 
     Process {
-        id: statsProbe
+        id: systemProbe
         command: [
             "bash",
             "-lc",
-            "HOST=$(hostnamectl --static 2>/dev/null || hostname 2>/dev/null || printf 'host'); " +
-            "CPU=$(top -bn1 | awk '/Cpu\\(s\\)/ { print int($2 + $4 + 0.5) \"%\"; exit }'); " +
-            "MEM=$(free -h | awk '/Mem:/ { print $3; exit }'); " +
-            "UP=$(uptime -p 2>/dev/null | sed 's/^up //'); " +
-            "BATTERY_LINE=$(for base in /sys/class/power_supply/BAT*; do [ -e \"$base\" ] || continue; cap=''; stat=''; [ -r \"$base/capacity\" ] && cap=$(cat \"$base/capacity\"); [ -r \"$base/status\" ] && stat=$(cat \"$base/status\"); if [ -n \"$cap\" ]; then if [ \"$stat\" = 'Charging' ] || [ \"$stat\" = 'Full' ]; then printf '|%s%%|%s\\n' \"$cap\" \"$stat\"; else printf '|%s%%|%s\\n' \"$cap\" \"$stat\"; fi; break; fi; done); " +
+            "HOST=$(hostnamectl --static 2>/dev/null || hostname); " +
+            "CPU=$(LC_ALL=C top -bn1 | awk '/Cpu\\(s\\)|%Cpu/ {for (i=1; i<=NF; i++) if ($i ~ /id,|id/) {gsub(/,/, \"\", $(i-1)); printf(\"%.0f%%\", 100-$(i-1)); exit}}'); " +
+            "MEM=$(awk '/MemTotal:/ { total=$2 } /MemAvailable:/ { avail=$2 } END { if (total > 0 && avail >= 0) printf(\"%.1f GB\", (total-avail)/1024/1024); else print \"-- GB\"; }' /proc/meminfo); " +
+            "UP=$(awk '{ total=int($1); days=int(total/86400); hrs=int((total%86400)/3600); mins=int((total%3600)/60); if (days>0) printf(\"%dd %02dh\", days, hrs); else printf(\"%02dh %02dm\", hrs, mins); }' /proc/uptime); " +
+            "BATTERY_LINE=''; for BATDIR in /sys/class/power_supply/BAT*; do if [ -d \"$BATDIR\" ] && [ -r \"$BATDIR/capacity\" ]; then CAP=$(cat \"$BATDIR/capacity\"); STATUS=$(cat \"$BATDIR/status\" 2>/dev/null); ICON=''; [ \"$CAP\" -ge 20 ] && ICON=''; [ \"$CAP\" -ge 40 ] && ICON=''; [ \"$CAP\" -ge 60 ] && ICON=''; [ \"$CAP\" -ge 80 ] && ICON=''; [ \"$STATUS\" = 'Charging' ] && ICON='󰂄'; [ \"$STATUS\" = 'Full' ] && ICON=''; BATTERY_LINE=$(printf '%s|%s%%|%s' \"$ICON\" \"$CAP\" \"$STATUS\"); break; fi; done; " +
             "if [ -n \"$BATTERY_LINE\" ]; then printf '%s\\n' \"$BATTERY_LINE\"; elif [ -r /sys/class/power_supply/AC/online ] && [ \"$(cat /sys/class/power_supply/AC/online)\" = '1' ]; then printf '|AC|Plugged\\n'; else printf '|--|Unknown\\n'; fi; " +
             "printf '%s\\n%s\\n%s\\n%s\\n' \"$HOST\" \"$CPU\" \"$MEM\" \"$UP\""
         ]

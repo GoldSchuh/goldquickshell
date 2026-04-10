@@ -1,3 +1,4 @@
+import QtCore
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -14,7 +15,7 @@ PanelWindow {
     property real triggerRightX: screen.width / 2 + 60
     property real triggerCenterX: screen.width / 2
     property real triggerBottomY: 42
-    property string vaultPath: "/home/roman/Dokumente/Notes"
+    property string vaultPath: StandardPaths.writableLocation(StandardPaths.DocumentsLocation) + "/Notes"
     property var fileEntries: []
     property string selectedRelativePath: ""
     property bool syncingEditor: false
